@@ -73,7 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(SolutionDir)include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -82,7 +82,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(SolutionDir)include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,7 +100,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\</Command>
+      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\
+xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\
+xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -133,7 +135,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\</Command>
+      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\
+xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\
+xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
