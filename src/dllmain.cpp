@@ -8,12 +8,26 @@ DWORD TimerAddress = 0x009142DC;
 float PreviousRaceTime = 0.0f;
 bool TimebugFixEnabled = 0;
 bool StabilityPatchesEnabled = 0;
+bool ShouldAddPurecallHandler = 0;
 
 void FixMemory()
 {
 	// Disable memory checks 
 	injector::WriteMemory<int>(0x00464EE6, 0x9090C031, true);
 	injector::WriteMemory<int>(0x00464F47, 0x9090C031, true);
+}
+
+void AddPurecallHandler()
+{
+	if (!ShouldAddPurecallHandler)
+		return;
+	char handler[] = { 0x31, 0xC0, 0x8B, 0x00, 0xC3 };
+	char replaceHandler[] = { 0x68, 0xB0, 0X56, 0x7C, 0x00, 0xE8, 0x61, 0xFB, 0xFF, 0xFF, 0x83, 0xC4, 0x04, 0xC3 };
+	char callPatch[] = { 0xE8, 0x7B, 0x19, 0x16, 0x00 };
+
+	injector::WriteMemoryRaw(0x007C56B0, handler, sizeof(handler), true);
+	injector::WriteMemoryRaw(0x007C56B5, replaceHandler, sizeof(replaceHandler), true);
+	injector::WriteMemoryRaw(0x00663D35, callPatch, sizeof(callPatch), true);
 }
 
 void FixTimebug()
@@ -48,11 +62,13 @@ void ReadConfig()
 
 	TimebugFixEnabled = iniReader.ReadInteger("Fixes", "TimebugFix", 0) == 1;
 	StabilityPatchesEnabled = iniReader.ReadInteger("Fixes", "StabilityFixes", 0) == 1;
+	ShouldAddPurecallHandler = iniReader.ReadInteger("Fixes", "AddPurecallHandler", 0) == 1;
 }
 
 void Init()
 {
 	ReadConfig();
+	AddPurecallHandler();
 	if (!StabilityPatchesEnabled)
 		return;
 	FixMemory();

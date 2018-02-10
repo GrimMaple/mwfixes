@@ -73,7 +73,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(SolutionDir)include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -82,7 +82,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
     <IncludePath>$(SolutionDir)include\;$(IncludePath)</IncludePath>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\scripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,9 +100,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\
-xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\
-xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\</Command>
+      <Command>echo f | xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\MWFixes.ini /Y 
+echo f | xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\LICENSE /Y 
+echo f | xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\Readme.txt /Y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -135,9 +135,9 @@ xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\</Command>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\
-xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\
-xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\</Command>
+      <Command>echo f | xcopy $(SolutionDir)$(ProjectName)\MWFixes.ini $(SolutionDir)bin\$(Configuration)\scripts\MWFixes.ini /Y 
+echo f | xcopy $(SolutionDir)LICENSE $(SolutionDir)bin\$(Configuration)\LICENSE /Y 
+echo f | xcopy $(SolutionDir)Readme.txt $(SolutionDir)bin\$(Configuration)\Readme.txt /Y </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
