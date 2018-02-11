@@ -9,12 +9,23 @@ float PreviousRaceTime = 0.0f;
 bool TimebugFixEnabled = 0;
 bool StabilityPatchesEnabled = 0;
 bool ShouldAddPurecallHandler = 0;
+bool PreventPurecalls = 0;
 
 void FixMemory()
 {
 	// Disable memory checks 
 	injector::WriteMemory<int>(0x00464EE6, 0x9090C031, true);
 	injector::WriteMemory<int>(0x00464F47, 0x9090C031, true);
+}
+
+void FixPurecall()
+{
+	if (!PreventPurecalls)
+		return;
+	char nops[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+
+	// Disables potentionally bad call
+	injector::WriteMemoryRaw(0x0043E005, nops, sizeof(nops), true);
 }
 
 void AddPurecallHandler()
@@ -63,12 +74,14 @@ void ReadConfig()
 	TimebugFixEnabled = iniReader.ReadInteger("Fixes", "TimebugFix", 0) == 1;
 	StabilityPatchesEnabled = iniReader.ReadInteger("Fixes", "StabilityFixes", 0) == 1;
 	ShouldAddPurecallHandler = iniReader.ReadInteger("Fixes", "AddPurecallHandler", 0) == 1;
+	PreventPurecalls = iniReader.ReadInteger("Fixes", "PreventPurecall", 0) == 1;
 }
 
 void Init()
 {
 	ReadConfig();
 	AddPurecallHandler();
+	FixPurecall();
 	if (!StabilityPatchesEnabled)
 		return;
 	FixMemory();
