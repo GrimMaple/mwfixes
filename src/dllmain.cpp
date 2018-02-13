@@ -22,10 +22,42 @@ void FixPurecall()
 {
 	if (!PreventPurecalls)
 		return;
-	char nops[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
 
-	// Disables potentionally bad call
-	injector::WriteMemoryRaw(0x0043E005, nops, sizeof(nops), true);
+	/*
+	 *		Pathc idea: the edx contains a ptr to class vtbl
+	 *		since we know that, we can determine the failing class (vtbl @ 0x00890970)
+	 *		if we catch this failing class, exit the function with 0 immideatly,
+	 *		otherwise continue as normal.
+	 *
+	 *		Pseudocode:
+	 *
+	 *		cmp edx, 00890970h		; if edx != 0x00890970
+	 *		jne normal_operation	; continue normal operation
+	 *		xor eax, eax			; else eax = 0 (result = 0)
+	 *		jmp return				; exit the function
+	 *	normal_operation:
+	 *		call dword ptr[edx+80h] ; call the virtual function if it exists
+	 *		jmp continue			; continue normal operation
+	 */
+
+	char callFix[] = { 0xE9, 0x0B, 0xFD, 0xFF, 0xFF, 		// jmp 0043DD15h
+					   0x90 };								// nop
+
+	char fixDD15[] = { 0x81, 0xFA, 0x70, 0x09, 0x89, 0x00,	// cmp edx, 00890970h
+					   0x75, 0xD8,							// jne 0043DCF5h
+					   0xEb, 0xC6 };						// jmp 0043DCE5h
+
+	char fixDCF5[] = { 0xFF, 0x92, 0x80, 0x00, 0x00, 0x00,	// call dword ptr[edx+ACh]
+					   0xE9, 0x0B, 0x03, 0x00, 0x00 };		// jmp  0043E00Bh
+
+	char fixDCE5[] = { 0x31, 0xC0, 							// xor eax, eax
+					   0xE9, 0x20, 0x05, 0x00, 0x00 };		// jmp 0043E20Ch
+
+	injector::WriteMemoryRaw(0x0043E005, callFix, sizeof(callFix), true);	// patch call
+	injector::WriteMemoryRaw(0x0043DD15, fixDD15, sizeof(fixDD15), true);
+	injector::WriteMemoryRaw(0x0043DCF5, fixDCF5, sizeof(fixDCF5), true);
+	injector::WriteMemoryRaw(0x0043DCE5, fixDCE5, sizeof(fixDCE5), true);
+
 }
 
 void AddPurecallHandler()
